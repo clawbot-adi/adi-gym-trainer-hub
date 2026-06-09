@@ -12,7 +12,7 @@
     .sub { color:var(--muted); margin-bottom:16px; }
     .grid { display:grid; grid-template-columns:1fr; gap:12px; }
     @media (min-width:760px){ .grid { grid-template-columns:1fr 1fr; } }
-    .card { background:var(--card); border:1px solid #252a34; border-radius:12px; padding:14px; }
+    .card { background:var(--card); border:1px solid #252a34; border-radius:12px; padding:14px; margin-bottom:12px; }
     .row { display:flex; justify-content:space-between; gap:10px; align-items:baseline; }
     .chip { background:#0b2a3a; color:#8ed8ff; padding:4px 8px; border-radius:999px; font-size:12px; white-space:nowrap; }
     ul{ margin: 8px 0 0 18px; padding:0; }
@@ -22,11 +22,16 @@
     .small { color:var(--muted); font-size:13px; }
     .k { font-weight:700; }
     .ok { color:#7cf48a; }
-    .warn { color:#ffd16f; }
     button { margin-top:12px; background:#1f8eff; color:#fff; border:none; border-radius:8px; padding:10px 12px; cursor:pointer; }
     .footer { margin-top:14px; color:var(--muted); font-size:12px; }
     .muted-box{background:#111722; border-radius:10px; padding:10px; margin-top:8px; }
-    .split-day { font-size:14px; }
+    label { display:block; margin:8px 0 4px; font-size:13px; color:#b9c2d0; }
+    input, textarea, select { width:100%; box-sizing:border-box; border-radius:8px; border:1px solid #2a2f3a; background:#0d1117; color:#f5f7fb; padding:8px; }
+    textarea{ min-height:72px; }
+    .log-row { display:grid; grid-template-columns: 1fr 1fr; gap:12px; }
+    .log-table{ width:100%; border-collapse:collapse; font-size:13px; }
+    .log-table th,.log-table td{ border-bottom:1px solid #2a2f3a; padding:7px; text-align:left; vertical-align:top; }
+    .log-table th{ color:#9eb0c7; font-weight:700; }
   </style>
 </head>
 <body>
@@ -45,14 +50,78 @@
   <h2>Exercise links (1x primary + 1x backup each)</h2>
   <div id="exercises" class="grid"></div>
 
+  <h2 id="log">Daily Logging (no login needed)</h2>
+  <div class="card">
+    <p class="small"><b>Morning/Evening quick flow:</b> “Did it today? what did well? what was missed? pain / feel / confidence”.
+    This is intentionally simple so both of you can log fast.</p>
+    <form id="logForm" autocomplete="off">
+      <div class="log-row">
+        <div>
+          <label for="name">Name</label>
+          <input id="name" placeholder="Adi / Partner" required />
+        </div>
+        <div>
+          <label for="done">Did you train today?</label>
+          <select id="done" required>
+            <option value="Yes">Yes</option>
+            <option value="No">No</option>
+          </select>
+        </div>
+      </div>
+      <label for="whatDid">What did you do today? (2-3 lines)</label>
+      <textarea id="whatDid" placeholder="Day, exercises, sets/reps"></textarea>
+
+      <label for="whatNot">What you did not complete / skipped</label>
+      <textarea id="whatNot" placeholder="Any move skipped, time issue, skipped due to pain"></textarea>
+
+      <div class="log-row">
+        <div>
+          <label for="pain">Pain/stiffness score (0-10)</label>
+          <input id="pain" type="number" min="0" max="10" step="1" value="0" />
+        </div>
+        <div>
+          <label for="feels">How easy this looked?</label>
+          <select id="feels">
+            <option>Easy</option>
+            <option selected>Fine</option>
+            <option>Hard</option>
+            <option>Tough</option>
+          </select>
+        </div>
+      </div>
+
+      <label for="notes">Notes</label>
+      <textarea id="notes" placeholder="Any observations, energy, pain location, etc."></textarea>
+
+      <button type="submit">Save this check-in</button>
+      <button type="button" id="copyBtn">Copy today's report (paste in Telegram)</button>
+      <button type="button" id="downloadBtn">Download CSV</button>
+    </form>
+    <div class="small" id="logStatus" style="margin-top:8px;color:#8ed8ff;"></div>
+  </div>
+
+  <h2>Recent logs</h2>
+  <div class="card">
+    <table class="log-table" id="logTable">
+      <thead>
+        <tr><th>Date</th><th>Name</th><th>Done</th><th>What did</th><th>Missed</th><th>Pain</th><th>Notes</th></tr>
+      </thead>
+      <tbody id="logBody"></tbody>
+    </table>
+  </div>
+
   <h2>Share + host</h2>
   <div class="card">
-    <p class="small">This is a local HTML repository you can share in Telegram / Drive. Start quickly with:</p>
+    <p class="small">Permanent link (open from anywhere):</p>
+    <div class="muted-box small">
+      https://clawbot-adi.github.io/adi-gym-trainer-hub/
+    </div>
+    <p class="small">If you are on local network only, use:</p>
     <div class="muted-box small">
       python3 -m http.server 8080 --directory /root/gym_trainer_hub<br/>
-      then open <b>http://localhost:8080</b> on your phone in same Wi-Fi / Tailscale.
+      then open <b>http://localhost:8080</b>
     </div>
-    <p class="small">Use one click to copy the link for your partner. If you want cloud hosting later, I can mirror it to GitHub Pages.</p>
+    <p class="small">Use this one shared link in Telegram or directly open from any browser.</p>
   </div>
 </div>
 
@@ -155,29 +224,110 @@ function getTodayKey(){
   const now = new Date();
   const ist = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Kolkata' }));
   const wd = ist.getDay();
-  const map = {1:'A',2:'B',3:'C',4:'D',5:'E',6:'A',0:'E'}; // Mon-Sun pattern
-  return {key:map[wd], date: ist.toLocaleDateString('en-IN', { weekday:'long', year:'numeric', month:'short', day:'numeric' })};
+  const map = {1:'A',2:'B',3:'C',4:'D',5:'E',6:'A',0:'E'};
+  return {
+    key: map[wd],
+    date: ist.toLocaleDateString('en-IN', { weekday:'long', year:'numeric', month:'short', day:'numeric' }),
+    iso: ist.toISOString().split('T')[0]
+  };
 }
 
-function render(){
-  const {key,date} = getTodayKey();
+function csvEscape(s=''){return `"${String(s).replaceAll('"','""')}"`;}
+
+const STORAGE_KEY = 'gymLogV1';
+
+function getLogs(){
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); } catch { return []; }
+}
+
+function saveLog(entry){
+  const logs = getLogs();
+  logs.unshift(entry);
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(logs.slice(0, 120)));
+  renderLogs();
+}
+
+function renderLogs(){
+  const logs = getLogs();
+  const body = document.getElementById('logBody');
+  body.innerHTML = logs.slice(0, 20).map(l=>`
+    <tr>
+      <td>${l.date}</td><td>${l.name}</td><td>${l.done}</td><td>${l.whatDid}</td><td>${l.whatNot}</td><td>${l.pain}</td><td>${l.notes}</td>
+    </tr>
+  `).join('') || '<tr><td colspan="7" class="small">No logs yet. Save first check-in.</td></tr>';
+}
+
+function handleSubmit(e){
+  e.preventDefault();
+  const name = document.getElementById('name').value.trim();
+  const {date, key, iso} = getTodayKey();
+  const entry = {
+    date: `${date} (Day ${key})`,
+    name,
+    done: document.getElementById('done').value,
+    whatDid: document.getElementById('whatDid').value.trim() || '-',
+    whatNot: document.getElementById('whatNot').value.trim() || '-',
+    pain: document.getElementById('pain').value,
+    feels: document.getElementById('feels').value,
+    notes: document.getElementById('notes').value.trim() || '-'
+  };
+  saveLog(entry);
+  document.getElementById('logStatus').textContent = `Saved for ${entry.name} on ${entry.date}.`;
+  document.getElementById('logForm').reset();
+  document.getElementById('pain').value = '0';
+}
+
+function copyTodayReport(){
+  const {date, key, iso} = getTodayKey();
+  const name = document.getElementById('name').value.trim() || 'Adi';
+  const done = document.getElementById('done').value;
+  const whatDid = document.getElementById('whatDid').value.trim() || '—';
+  const whatNot = document.getElementById('whatNot').value.trim() || '—';
+  const pain = document.getElementById('pain').value;
+  const notes = document.getElementById('notes').value.trim() || '—';
+  const text = `Gym log (${date}, Day ${key})\nName: ${name}\nDid workout: ${done}\nDid: ${whatDid}\nMissed: ${whatNot}\nPain: ${pain}/10\nNotes: ${notes}`;
+  navigator.clipboard.writeText(text).then(()=>{
+    document.getElementById('logStatus').textContent = 'Copied report to clipboard. Paste it in Telegram.';
+  }).catch(()=>{
+    document.getElementById('logStatus').textContent = 'Copy blocked. Select the text manually if needed.';
+    alert(text);
+  });
+}
+
+function downloadCSV(){
+  const logs = getLogs();
+  const header = ['Date','Name','Done','WhatDid','WhatNot','Pain','Feels','Notes'];
+  const rows = logs.map(l => [l.date,l.name,l.done,l.whatDid,l.whatNot,l.pain,l.feels,l.notes].map(csvEscape).join(','));
+  const csv = [header.map(csvEscape).join(','), ...rows].join('\n');
+  const blob = new Blob([csv], { type:'text/csv;charset=utf-8;' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `gym_logs_${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+}
+
+(function render(){
+  const {key,date,iso} = getTodayKey();
   const d = routine[key];
 
   const today = document.getElementById('todayCard');
   today.className='card';
-  today.innerHTML = `<div class="row"><h3>Today (${date})</h3><span class="chip">Day ${key}</span></div><div class='split-day'>${d.title}</div><div class='muted-box small'>Target: 3 sets each, 8–12 reps mostly, RPE 6–7. Rest 60–90 sec. If a move irritates joints, skip and replace with the backup machine movement.</div>`;
+  today.innerHTML = `<div class="row"><h3>Today (${date})</h3><span class="chip">Day ${key}</span></div><div class='split-day'>${d.title}</div><div class='muted-box small'>Target: 3 sets each, 8–12 reps mostly, RPE 6–7. Rest 60–90 sec. If a move irritates joints, skip and replace with backup movement.</div>`;
 
   const plan = document.getElementById('plan');
   const warm = document.getElementById('warmup');
   const exps = document.getElementById('exercises');
-  plan.innerHTML = `<div class=\"card\"><div class=\"row\"><h3>Main Workout</h3><span class=\"chip\">~45-50 min</span></div><ul>${d.moves.map(m=>`<li><span class='k'>${m.name}</span> — <span class='small'>${m.cue}</span></li>`).join('')}</ul><div class='small ok'>Keep each session under 60 minutes including warm-up.</div></div>`;
 
-  warm.innerHTML = `<div class=\"card\"><div class=\"row\"><h3>Warm-up (5-7 min)</h3><span class=\"chip\">Do this first</span></div><ul>${warmups.map(m=>`<li>${m.name} <span class='small'>(${m.cue})</span></li>`).join('')}</ul></div>`;
+  plan.innerHTML = `<div class="card"><div class="row"><h3>Main Workout</h3><span class="chip">~45-50 min</span></div><ul>${d.moves.map(m=>`<li><span class='k'>${m.name}</span> — <span class='small'>${m.cue}</span></li>`).join('')}</ul><div class='small ok'>Keep each session under 60 minutes including warm-up.</div></div>`;
+  warm.innerHTML = `<div class="card"><div class="row"><h3>Warm-up (5-7 min)</h3><span class="chip">Do this first</span></div><ul>${warmups.map(m=>`<li>${m.name} <span class='small'>(${m.cue})</span></li>`).join('')}</ul></div>`;
+  exps.innerHTML = exerciseVideos.map(v=>`<div class="card"><div class='k'>${v.exercise}</div><div class='video'><a href='${v.primary}' target='_blank'>Primary video</a> <span class='small'>— ${v.primaryNote}</span></div><div class='video'><a href='${v.backup}' target='_blank'>Backup video</a> <span class='small'>— ${v.backupNote}</span></div></div>`).join('');
 
-  exps.innerHTML = exerciseVideos.map(v=>`<div class=\"card\"><div class='k'>${v.exercise}</div><div class='video'><a href='${v.primary}' target='_blank'>Primary video</a> <span class='small'>— ${v.primaryNote}</span></div><div class='video'><a href='${v.backup}' target='_blank'>Backup video</a> <span class='small'>— ${v.backupNote}</span></div></div>`).join('');
-}
+  document.getElementById('logForm').addEventListener('submit', handleSubmit);
+  document.getElementById('copyBtn').addEventListener('click', copyTodayReport);
+  document.getElementById('downloadBtn').addEventListener('click', downloadCSV);
 
-render();
+  renderLogs();
+})();
 </script>
 </body>
 </html>
