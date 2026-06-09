@@ -1,699 +1,566 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Adi + Partner Gym Hub</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gym Progress Hub</title>
   <style>
     :root {
-      --bg: #0b1020;
-      --bg-2: #111a2f;
-      --surface: #121a2b;
-      --surface-soft: #18233c;
-      --surface-line: #2a3860;
-      --text: #edf2ff;
-      --muted: #a8b3cd;
-      --accent: #6ed3ff;
-      --accent-2: #9a6bff;
-      --ok: #3ad29f;
-      --warn: #ffcf6a;
-      --bad: #ff6b6b;
-      --shadow: 0 10px 35px rgba(0, 0, 0, 0.28);
-      --radius: 16px;
-      --radius-sm: 11px;
-      --radius-lg: 22px;
+      --bg: #070b12;
+      --panel: #121823;
+      --panel-2: #171f2b;
+      --ink: #e9eef8;
+      --muted: #8ea0ba;
+      --line: #263248;
+      --accent: #6ab5ff;
+      --accent-2: #80e3d0;
+      --good: #7ef09e;
+      --warn: #ffdd80;
+      --bad: #ff8b9a;
+      --shadow: 0 12px 30px rgba(0,0,0,0.28);
     }
-
     * { box-sizing: border-box; }
-
+    html, body { margin: 0; padding: 0; }
     body {
-      margin: 0;
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      background: radial-gradient(1200px 700px at 85% -20%, rgba(154,107,255,.22), transparent 44%),
-                  radial-gradient(700px 500px at -5% 20%, rgba(110,211,255,.24), transparent 40%),
-                  var(--bg);
-      color: var(--text);
+      font-family: Inter, 'Segoe UI', Arial, sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(900px 300px at 12% -10%, rgba(106,181,255,.18), transparent 45%),
+        radial-gradient(700px 260px at 90% 0%, rgba(128,227,208,.16), transparent 50%),
+        var(--bg);
       min-height: 100vh;
+      padding: 22px 16px 36px;
     }
-
     .app {
-      max-width: 1060px;
+      max-width: 1120px;
       margin: 0 auto;
-      padding: 20px 16px 28px;
     }
-
-    .topbar {
-      position: sticky;
-      top: 8px;
-      z-index: 5;
-      margin-bottom: 14px;
-    }
-
-    .topbar-inner {
+    .top {
       display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
       justify-content: space-between;
       align-items: center;
-      gap: 12px;
-      background: linear-gradient(120deg, rgba(17,26,43,.86), rgba(26,37,63,.86));
-      border: 1px solid var(--surface-line);
-      padding: 12px 14px;
-      border-radius: var(--radius);
-      backdrop-filter: blur(10px);
-      box-shadow: var(--shadow);
+      margin-bottom: 14px;
     }
-
-    h1, h2, h3 { margin: 0; }
-
-    h1 { font-size: 1.5rem; line-height: 1.15; }
-    .subtitle { margin: 6px 0 0; color: var(--muted); font-size: .95rem; }
-
-    .btn {
-      appearance: none;
-      border: 0;
-      border-radius: 999px;
-      background: linear-gradient(90deg, #6ed3ff, #9a6bff);
-      color: #071126;
-      padding: 11px 14px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: transform .08s ease, filter .2s ease;
+    h1, h2, h3 {
+      margin: 0;
+      line-height: 1.2;
+      letter-spacing: 0.2px;
     }
-    .btn:hover { filter: brightness(1.08); }
-    .btn:active { transform: translateY(1px); }
-
-    .grid {
-      display: grid;
-      gap: 12px;
-      grid-template-columns: 1fr;
+    .sub {
+      color: var(--muted);
+      margin-top: 4px;
     }
-    @media (min-width: 860px) {
-      .grid { grid-template-columns: 1.12fr .88fr; }
-      .grid.three { grid-template-columns: 1fr 1fr 1fr; }
-      .grid.one { grid-template-columns: 1fr; }
-    }
-
     .card {
-      background: linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.0));
-      border: 1px solid var(--surface-line);
-      border-radius: var(--radius);
+      background: linear-gradient(180deg, var(--panel), var(--panel-2));
+      border: 1px solid var(--line);
+      border-radius: 16px;
       padding: 14px;
       box-shadow: var(--shadow);
+      margin-bottom: 14px;
     }
-
-    .card h2 { font-size: 1.06rem; color: #ecf1ff; margin-bottom: 10px; }
-    .card h3 { font-size: 1rem; margin-bottom: 8px; }
-
-    .muted { color: var(--muted); }
-    .small { font-size: .89rem; }
-    ul { margin: 6px 0 0; padding-left: 18px; }
-    li { margin: 6px 0; }
-
-    .chiprow {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 8px;
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
+    @media (min-width: 900px) {
+      .grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+    .kicker {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #9db7df;
+      font-weight: 700;
     }
     .chip {
-      border: 1px solid var(--surface-line);
+      border: 1px solid #2f3e5f;
       border-radius: 999px;
       padding: 5px 10px;
-      color: #d9e5ff;
-      font-size: .81rem;
-      background: rgba(255,255,255,.03);
+      background: #0e1825;
+      color: #a1d3ff;
+      font-size: 12px;
+      white-space: nowrap;
     }
-    .chip.accent {
-      border-color: rgba(110,211,255,.45);
-      background: rgba(110,211,255,.10);
-      color: #d6f0ff;
-    }
-
-    .workout-grid {
-      display: grid;
-      gap: 10px;
-      margin-top: 10px;
-    }
-
-    .k { font-weight: 700; }
-    .ok { color: var(--ok); }
-
-    .today {
-      background: linear-gradient(130deg, rgba(110, 211, 255, 0.14), rgba(154, 107, 255, 0.14));
-      border: 1px solid rgba(164, 191, 255, .34);
-    }
-
-    label { display:block; margin: 10px 0 4px; font-size: .84rem; color: #cfd8f7; }
-    input, textarea, select {
-      width: 100%;
-      border-radius: 12px;
-      border: 1px solid #2f3b64;
-      background: #0a1223;
-      color: #ecf2ff;
-      padding: 9px 10px;
-      font: inherit;
-      min-height: 40px;
-    }
-    textarea { min-height: 90px; resize: vertical; }
-
-    .row2 {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 10px;
-    }
-    @media (min-width: 700px) {
-      .row2 { grid-template-columns: 1fr 1fr; }
-    }
-
-    .two-btn {
+    .row {
       display: flex;
-      gap: 8px;
-      margin-top: 11px;
+      gap: 10px;
+      align-items: baseline;
+      justify-content: space-between;
       flex-wrap: wrap;
     }
-    .btn.secondary {
-      background: linear-gradient(90deg, #1f6dff, #4cb6ff);
-      color: white;
+    ul { margin: 8px 0 0 18px; padding: 0; color: #d9e3f2; }
+    li { margin: 7px 0; }
+    .muted { color: var(--muted); font-size: 13px; }
+    .label {
+      display: block;
+      color: #b5c3d7;
+      font-weight: 600;
+      margin: 8px 0 6px;
+      font-size: 13px;
+    }
+    input, select, textarea, button {
+      border-radius: 10px;
+      border: 1px solid #2f3f5f;
+      background: #0d1420;
+      color: var(--ink);
+      padding: 10px;
+      font-size: 14px;
+      width: 100%;
+      transition: border-color .2s ease, background .2s ease;
+    }
+    textarea { min-height: 72px; resize: vertical; }
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+      background: #101a2a;
+    }
+    .btn {
+      border: none;
+      margin-top: 10px;
+      background: linear-gradient(180deg, #5eb2ff, #3180ff);
+      color: #fff;
+      cursor: pointer;
       font-weight: 700;
-      border: 1px solid rgba(154, 212, 255, 0.4);
+      letter-spacing: 0.2px;
     }
-    .btn.ghost {
-      background: transparent;
-      border: 1px solid rgba(190, 204, 241, 0.35);
-      color: #dbe6ff;
+    .btn.alt { background: linear-gradient(180deg, #3fe2c2, #19b59d); }
+    .btn.muted { background: #1a2433; border: 1px solid #34445f; }
+    .btn:hover { filter: brightness(1.08); }
+    .btn:active { transform: translateY(1px); }
+    .actions { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 8px; }
+    @media (max-width: 640px) {
+      .actions { grid-template-columns: 1fr; }
     }
-    .btn.danger {
-      background: linear-gradient(90deg, #ff7b7b, #ff5fa2);
-    }
-
-    .range-wrap {
-      display: flex;
-      align-items: center;
+    .small { font-size: 12px; color: var(--muted); }
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
       gap: 10px;
     }
-    .range-wrap input[type=range] { flex: 1; }
-    #painVal {
-      min-width: 54px;
-      text-align: center;
-      background: rgba(255,255,255,.06);
-      border: 1px solid #304070;
-      border-radius: 8px;
-      padding: 6px;
-      font-weight: 700;
-    }
-
-    .status {
-      font-size: .9rem;
-      margin-top: 8px;
-      min-height: 20px;
-      color: #9fd3ff;
-    }
-    .status.warn { color: var(--warn); }
-    .status.ok { color: var(--ok); }
-
-    .table-wrap { overflow: auto; margin-top: 8px; }
-    table { width: 100%; border-collapse: collapse; font-size: .84rem; }
-    th, td {
-      text-align: left;
-      border-bottom: 1px solid #25345f;
-      padding: 8px 7px;
-      vertical-align: top;
-      max-width: 260px;
-    }
-    th { color: #acb6d4; font-weight: 700; position: sticky; top: 0; background: #141f38; }
-
-    .empty {
-      padding: 12px;
-      color: var(--muted);
-      font-size: .85rem;
-      border: 1px dashed #2e3b67;
-      border-radius: var(--radius-sm);
-      background: #0f1730;
-    }
-
-    .linkline {
-      background: #0c1328;
-      border: 1px solid #26356a;
-      border-radius: 10px;
-      padding: 10px;
-      word-break: break-all;
-      font-size: .88rem;
-      color: #d8e5ff;
-    }
-
-    .logo {
-      width: 40px;
-      height: 40px;
-      border-radius: 10px;
-      background: conic-gradient(from 230deg, #6ed3ff, #9a6bff, #6ed3ff);
+    @media (max-width: 680px) { .form-grid { grid-template-columns: 1fr; } }
+    .kpi {
       display: grid;
-      place-items: center;
-      color: #071126;
-      font-weight: 800;
-      letter-spacing: .08em;
-      font-size: .75rem;
-    }
-
-    .footer {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
       margin-top: 10px;
-      color: #94a2c6;
-      font-size: .82rem;
     }
-
-    .pill {
-      display: inline-flex;
-      align-items: center;
-      padding: 5px 10px;
-      border-radius: 99px;
-      border: 1px solid rgba(154, 212, 255, .35);
-      color: #d4e4ff;
-      font-size: .82rem;
-    }
-
-    .split {
-      display: grid;
-      gap: 12px;
-      grid-template-columns: 1fr;
-    }
-    @media (min-width: 860px) {
-      .split { grid-template-columns: 1.45fr .55fr; }
-    }
-
-    a { color: #a9d8ff; text-decoration: none; }
-    a:hover { text-decoration: underline; }
-
-    .vidcard {
-      display: grid;
-      gap: 6px;
-      padding: 8px;
-      border: 1px solid #2e3e66;
+    .kpi-card {
+      background: #0b1320;
+      border: 1px solid #273650;
       border-radius: 12px;
-      background: rgba(255,255,255,.02);
+      padding: 10px;
     }
-
-    .muted-box { background: #0b1530; border-left: 3px solid var(--accent); padding: 10px; border-radius: 10px; }
-
-    .hide { display: none; }
-
-    .btn-block {
-      width: 100%;
-      text-align: center;
-    }
-
-    .floating {
-      position: fixed;
-      right: 14px;
-      bottom: 14px;
-      display: grid;
+    .kpi-card b { font-size: 20px; display: block; }
+    .log-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       gap: 8px;
     }
-
-    @media (prefers-reduced-motion: no-preference) {
-      .card {
-        transform: translateY(0);
-        transition: transform .2s ease;
-      }
-      .card:hover { transform: translateY(-2px); }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      table-layout: fixed;
+    }
+    th, td {
+      border-bottom: 1px solid #273350;
+      padding: 8px 6px;
+      vertical-align: top;
+      text-align: left;
+      word-wrap: break-word;
+    }
+    th {
+      position: sticky;
+      top: 0;
+      background: #101b2b;
+      color: #adc0de;
+      font-weight: 700;
+      font-size: 12px;
+    }
+    .status {
+      color: #91ddff;
+      margin-top: 8px;
+      min-height: 20px;
+      font-size: 13px;
+    }
+    .footer {
+      text-align: center;
+      margin-top: 16px;
+      color: var(--muted);
+      font-size: 12px;
     }
   </style>
 </head>
 <body>
-  <main class="app">
-    <div class="topbar">
-      <div class="topbar-inner">
-        <div>
-          <h1>Gym Routine + Daily Logs</h1>
-          <p class="subtitle">A simple, cleaner UI for both of you to log progress from anywhere.</p>
-        </div>
-        <div class="logo">GAH</div>
+  <div class="app">
+    <section class="top">
+      <div>
+        <h1>Gym Progress Hub</h1>
+        <div class="sub">Clean daily check-in for both of you. Fast form, fast logging, fast progress.</div>
       </div>
+      <div class="chip" id="dayChip">Loading...</div>
+    </section>
+
+    <section class="grid" id="today"></section>
+
+    <section class="grid">
+      <div class="card">
+        <div class="kicker">Quick workout flow</div>
+        <h3>Today's plan</h3>
+        <div id="planArea"></div>
+        <div class="kpi" id="kpis"></div>
+      </div>
+      <div class="card">
+        <div class="kicker">Quick prep</div>
+        <h3>5 minute warm-up</h3>
+        <ul id="warmupArea"></ul>
+      </div>
+    </section>
+
+    <section class="card" id="logCard">
+      <div class="row">
+        <h2>Daily Progress Log</h2>
+        <span class="chip">No login • works on phone + desktop</span>
+      </div>
+      <div class="muted">Flow: Did you do it? What did you do? What didn’t you do? pain score 0–10. Then save.</div>
+
+      <form id="logForm">
+        <div class="form-grid">
+          <div>
+            <label class="label" for="who">Who is logging?</label>
+            <input id="who" list="whoList" required placeholder="Adi / her name" />
+            <datalist id="whoList">
+              <option value="Adi" />
+              <option value="Partner" />
+            </datalist>
+          </div>
+          <div>
+            <label class="label" for="did">Did you train today?</label>
+            <select id="did" required>
+              <option value="Yes">Yes</option>
+              <option value="Partially">Partially</option>
+              <option value="No">No</option>
+            </select>
+          </div>
+        </div>
+
+        <label class="label" for="done">What did you do?</label>
+        <textarea id="done" placeholder="Exercises + sets/reps or summary"></textarea>
+
+        <label class="label" for="missed">What did you not complete?</label>
+        <textarea id="missed" placeholder="Missed exercises, time issue, energy, pain, equipment"></textarea>
+
+        <div class="form-grid">
+          <div>
+            <label class="label" for="pain">Pain / stiffness (0 to 10)</label>
+            <input id="pain" type="number" min="0" max="10" step="1" value="0" />
+          </div>
+          <div>
+            <label class="label" for="feel">Workout feel</label>
+            <select id="feel">
+              <option>Easy</option>
+              <option selected>Good</option>
+              <option>Tough</option>
+              <option>Painful</option>
+            </select>
+          </div>
+        </div>
+
+        <label class="label" for="notes">Extra notes</label>
+        <textarea id="notes" placeholder="Any observation: range, hunger, sleep, confidence"></textarea>
+
+        <div class="actions">
+          <button class="btn" type="submit">Save check-in</button>
+          <button class="btn alt" type="button" id="copyBtn">Copy summary for Telegram</button>
+          <button class="btn muted" type="button" id="csvBtn">Download CSV</button>
+        </div>
+        <div class="status" id="status"></div>
+      </form>
+    </section>
+
+    <section class="card">
+      <div class="log-head">
+        <h3>Recent logs</h3>
+        <span class="small">Stored on this browser only (shared on same account/device).</span>
+      </div>
+      <div style="overflow:auto; max-height: 340px;">
+        <table>
+          <thead>
+            <tr>
+              <th style="width: 130px;">Date</th>
+              <th style="width: 95px;">Name</th>
+              <th style="width: 80px;">Done</th>
+              <th style="width: 210px;">Did</th>
+              <th style="width: 220px;">Skipped / Missing</th>
+              <th style="width: 70px;">Pain</th>
+              <th>Notes</th>
+            </tr>
+          </thead>
+          <tbody id="logRows"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="card">
+      <h3>Open anywhere</h3>
+      <div class="kicker">Use this URL anywhere (phone, laptop, office Wi-Fi, travels)</div>
+      <p class="muted">https://clawbot-adi.github.io/adi-gym-trainer-hub/</p>
+      <p class="muted">Keep this open: you and your partner can both log from this shared page in real time in your current browser context.</p>
+    </section>
+
+    <div class="footer">Built for daily consistency, not perfection. Keep it boring, keep it done.</div>
+  </div>
+
+<script>
+const routine = {
+  A: {
+    day: 'Day A — Lower + Core',
+    title: 'Machine-safe beginner lower focus',
+    main: [
+      ['Leg Press', '3 x 8–12'],
+      ['Romanian Deadlift (DB)', '3 x 8–10'],
+      ['Goblet Squat', '3 x 8–10'],
+      ['Seated Leg Curl', '3 x 10–12'],
+      ['Side Plank', '3 x 20–30 sec each'],
+      ['Dead Bug', '3 x 8 each side']
+    ],
+    targetMins: '45-55'
+  },
+  B: {
+    day: 'Day B — Push',
+    title: 'Chest + shoulders + triceps',
+    main: [
+      ['Incline Dumbbell Press', '3 x 8–10'],
+      ['Chest Press Machine', '3 x 10–12'],
+      ['Dumbbell Shoulder Press', '3 x 10'],
+      ['Lateral Raise', '2 x 12'],
+      ['Rope Triceps Pushdown', '3 x 12'],
+      ['Push-up (knees / elevated)', '2 x AMRAP quality']
+    ],
+    targetMins: '45-55'
+  },
+  C: {
+    day: 'Day C — Pull',
+    title: 'Back + biceps',
+    main: [
+      ['Assisted Pull-up', '3 x 5–8'],
+      ['Lat Pulldown', '3 x 8–12'],
+      ['Seated Cable Row', '3 x 10'],
+      ['One-arm DB Row', '3 x 10 each'],
+      ['Face Pull', '3 x 15'],
+      ['Bicep Curl', '3 x 10–12']
+    ],
+    targetMins: '45-55'
+  },
+  D: {
+    day: 'Day D — Legs + Glutes + Core',
+    title: 'Lower body control + posterior chain',
+    main: [
+      ['Leg Press', '3 x 10–12'],
+      ['Hip Thrust', '3 x 10'],
+      ['Leg Extension', '3 x 10–12'],
+      ['Seated Calf Raise', '3 x 12–15'],
+      ['Pallof Press', '3 x 10 each'],
+      ['Plank', '3 x 30–40 sec']
+    ],
+    targetMins: '45-55'
+  },
+  E: {
+    day: 'Day E — Upper Balance + Conditioning',
+    title: 'Upper cleanup + easy condition',
+    main: [
+      ['Assisted Dip', '3 x 8–10'],
+      ['Cable Row', '3 x 10'],
+      ['Rear Delt Fly', '2 x 15'],
+      ['Hammer Curl', '3 x 12'],
+      ['Treadmill Walk/Jog', '12 min'],
+      ['Cool-down mobility', '5 min']
+    ],
+    targetMins: '40-50'
+  }
+};
+
+const warmup = [
+  'Treadmill walk 4 min (low incline)',
+  'Hip hinge drill 2 x 10',
+  'Bodyweight box squat 2 x 10',
+  'Band pull-apart 2 x 15',
+  'Scapular wall retract 2 x 10',
+  'Neck chin tucks 2 x 10'
+];
+
+const STORAGE = 'gym_hub_logs_v2';
+
+function todayInIST() {
+  const now = new Date();
+  const ist = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Kolkata' }));
+  const wd = ist.getDay();
+  const map = {1:'A',2:'B',3:'C',4:'D',5:'E',6:'A',0:'E'};
+  const day = map[wd];
+  return {
+    key: day,
+    label: ist.toLocaleDateString('en-IN', { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' }),
+    iso: ist.toISOString().slice(0,10)
+  };
+}
+
+function loadLogs() {
+  try { return JSON.parse(localStorage.getItem(STORAGE) || '[]'); } catch { return []; }
+}
+
+function saveAll(logs) {
+  localStorage.setItem(STORAGE, JSON.stringify(logs.slice(0, 120)));
+}
+
+function addLog(entry) {
+  const logs = loadLogs();
+  logs.unshift(entry);
+  saveAll(logs);
+  renderLogs();
+}
+
+function renderToday() {
+  const t = todayInIST();
+  const plan = routine[t.key];
+
+  document.getElementById('dayChip').textContent = `IST: ${t.label} • ${plan.day}`;
+
+  const today = document.createElement('div');
+  today.className = 'card';
+  today.innerHTML = `
+    <div class="row">
+      <div>
+        <div class="kicker">Today's session</div>
+        <h2>${plan.day}</h2>
+        <div class="muted">${plan.title}</div>
+      </div>
+      <div class="chip">Target ${plan.targetMins}</div>
     </div>
+    <ul>${plan.main.map(x => `<li><b>${x[0]}</b> — ${x[1]}</li>`).join('')}</ul>
+  `;
 
-    <section class="grid split">
-      <div class="card today" id="todayCard"></div>
-      <div class="card">
-        <h2>Progress Log (simple flow)</h2>
-        <p class="small muted">Answer 3 prompts then save. No login required.</p>
-        <form id="logForm" autocomplete="off">
-          <div class="row2">
-            <div>
-              <label for="name">Who are you?</label>
-              <select id="name">
-                <option>Adi</option>
-                <option>Partner</option>
-                <option>Guest</option>
-              </select>
-            </div>
-            <div>
-              <label for="done">Did you do your session?</label>
-              <select id="done" required>
-                <option value="Yes">Yes</option>
-                <option value="No">No</option>
-                <option value="Partial">Partially</option>
-              </select>
-            </div>
-          </div>
+  const split = document.createElement('div');
+  split.className = 'card';
+  split.innerHTML = `
+    <div class="kicker">Guidelines</div>
+    <h2>How to keep it real</h2>
+    <ul>
+      <li>RPE 6-7, crisp control, no ego reps.</li>
+      <li>Rests 60–90 seconds.</li>
+      <li>Stop if form collapses or pain starts to worsen.</li>
+      <li>Keep sessions under 60 minutes including warm-up.</li>
+    </ul>
+  `;
 
-          <label for="whatDid">What did you do? (ex: exercises / sets / reps)</label>
-          <textarea id="whatDid" placeholder="Incline press 3x10, rows 3x8, dead bug 3x8 each side"></textarea>
+  const planArea = document.getElementById('today');
+  planArea.innerHTML = '';
+  planArea.appendChild(today);
+  planArea.appendChild(split);
 
-          <label for="whatNot">What was not done / skipped?</label>
-          <textarea id="whatNot" placeholder="Missed side plank due to time"></textarea>
+  const planArea2 = document.getElementById('planArea');
+  planArea2.innerHTML = `<div class='muted'>Primary work this session:</div><ul>${plan.main.map(x=>`<li>${x[0]} · ${x[1]}</li>`).join('')}</ul>`;
 
-          <label for="notes">Pain / stiffness / confidence notes</label>
-          <textarea id="notes" placeholder="Right shoulder slight tightness. Energy: high. Confidence: 7/10"></textarea>
+  document.getElementById('warmupArea').innerHTML = warmup.map(x=>`<li>${x}</li>`).join('');
+  document.getElementById('kpis').innerHTML = `
+    <div class="kpi-card"><div class="muted">Sets this plan</div><b>${plan.main.length}</b></div>
+    <div class="kpi-card"><div class="muted">Target time</div><b>${plan.targetMins} min</b></div>
+    <div class="kpi-card"><div class="muted">Status</div><b>Ready</b></div>
+  `;
+}
 
-          <div class="row2" style="align-items:end;">
-            <div>
-              <label for="feels">How did it feel?</label>
-              <select id="feels">
-                <option>Easy</option>
-                <option selected>Fine</option>
-                <option>Hard</option>
-                <option>Tough</option>
-              </select>
-            </div>
-            <div>
-              <label>Pain score (0-10)</label>
-              <div class="range-wrap">
-                <input id="pain" type="range" min="0" max="10" step="1" value="0" />
-                <span id="painVal">0</span>
-              </div>
-            </div>
-          </div>
+function renderLogs() {
+  const rows = loadLogs();
+  const tbody = document.getElementById('logRows');
+  if (!rows.length) {
+    tbody.innerHTML = '<tr><td colspan="7" class="muted">No entries yet. Add first check-in above.</td></tr>';
+    return;
+  }
+  tbody.innerHTML = rows.slice(0, 20).map(r => `
+    <tr>
+      <td>${r.date}</td>
+      <td>${r.who}</td>
+      <td>${r.did}</td>
+      <td>${r.didWhat}</td>
+      <td>${r.missed}</td>
+      <td>${r.pain}</td>
+      <td>${r.notes}</td>
+    </tr>
+  `).join('');
+}
 
-          <div class="two-btn">
-            <button class="btn" id="saveBtn" type="submit">Save check-in</button>
-            <button class="btn secondary" type="button" id="copyBtn">Copy today's report</button>
-            <button class="btn ghost" type="button" id="downloadBtn">Download CSV</button>
-          </div>
-          <div id="logStatus" class="status"></div>
-        </form>
-      </div>
-    </section>
+function formToText() {
+  const t = todayInIST();
+  const plan = routine[t.key];
+  const who = document.getElementById('who').value.trim() || 'Adi';
+  const did = document.getElementById('did').value;
+  const didWhat = document.getElementById('done').value.trim() || '—';
+  const missed = document.getElementById('missed').value.trim() || '—';
+  const pain = document.getElementById('pain').value;
+  const feel = document.getElementById('feel').value;
+  const notes = document.getElementById('notes').value.trim() || '—';
 
-    <div class="grid three" style="margin-top:12px;">
-      <div class="card">
-        <h2>Today's workout</h2>
-        <div id="todaySummary" class="muted-box"></div>
-        <div id="plan" class="workout-grid"></div>
-      </div>
-      <div class="card">
-        <h2>Warm-up (5–7 min)</h2>
-        <div id="warmup"></div>
-      </div>
-      <div class="card">
-        <h2>Daily check-in history</h2>
-        <div class="chiprow">
-          <span class="chip accent">Last 20 entries</span>
-          <span class="chip">Saved in browser</span>
-        </div>
-        <div class="table-wrap">
-          <table aria-label="Recent daily logs">
-            <thead>
-              <tr>
-                <th style="width:120px">Date</th>
-                <th style="width:70px">Name</th>
-                <th style="width:70px">Done</th>
-                <th>What did</th>
-                <th>Missed</th>
-                <th style="width:52px">Pain</th>
-                <th>Notes</th>
-              </tr>
-            </thead>
-            <tbody id="logBody"></tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-
-    <section style="margin-top:12px;" class="card">
-      <h2>Exercise references</h2>
-      <p class="small muted">One primary and one backup per movement — quick recovery when one video doesn't load.</p>
-      <div class="grid" id="exercises"></div>
-    </section>
-
-    <section style="margin-top:12px;" class="card">
-      <h2>Share it from anywhere</h2>
-      <p class="small muted">Open this in any browser, no app required.</p>
-      <div class="linkline">https://clawbot-adi.github.io/adi-gym-trainer-hub/</div>
-      <p class="small muted" style="margin-top: 10px;">Local backup only (if needed):</p>
-      <div class="muted-box">python3 -m http.server 8080 --directory /root/gym_trainer_hub</div>
-      <p class="small footer">This UI stores logs per browser. If you want shared cloud logs in one place, I can add that next.</p>
-      <div class="floating">
-        <a class="pill" href="#log">Jump to log section</a>
-      </div>
-    </section>
-  </main>
-
-  <script>
-    const routine = {
-      A: {
-        title: 'Lower + Core (Machine-safe, Beginner)',
-        focus: 'Leg press, hinges, hamstrings, abs',
-        moves: [
-          ['Leg Press (feet high, controlled depth)', '3 x 8-12'],
-          ['Romanian Deadlift (dumbbells)', '3 x 8-10'],
-          ['Goblet Squat (box/parallel)', '3 x 8-10'],
-          ['Seated Leg Curl', '3 x 10-12'],
-          ['Side Plank', '3 x 20-30 sec each'],
-          ['Dead Bug', '3 x 8 each side']
-        ]
-      },
-      B: {
-        title: 'Push',
-        focus: 'Chest, shoulders, triceps',
-        moves: [
-          ['Incline Dumbbell Press', '3 x 8-10'],
-          ['Chest Press Machine', '3 x 10-12'],
-          ['Dumbbell Shoulder Press', '3 x 10'],
-          ['Dumbbell Lateral Raise', '2 x 12'],
-          ['Rope Triceps Pushdown', '3 x 12'],
-          ['Push-up (knees/elevated if needed)', '2 x AMRAP quality']
-        ]
-      },
-      C: {
-        title: 'Pull',
-        focus: 'Back width, upper-back control',
-        moves: [
-          ['Assisted Pull-up', '3 x 5-8'],
-          ['Lat Pulldown', '3 x 8-12'],
-          ['Seated Cable Row', '3 x 10'],
-          ['One-arm DB Row', '3 x 10 each'],
-          ['Face Pull', '3 x 15'],
-          ['Bicep Curl (DB)', '3 x 10-12']
-        ]
-      },
-      D: {
-        title: 'Legs + Glutes + Core',
-        focus: 'Quads, glutes, core control',
-        moves: [
-          ['Leg Press (narrow stance)', '3 x 10-12'],
-          ['Hip Thrust', '3 x 10'],
-          ['Leg Extension', '3 x 10-12'],
-          ['Seated Calf Raise', '3 x 12-15'],
-          ['Pallof Press', '3 x 10 each'],
-          ['Plank', '3 x 30-40 sec']
-        ]
-      },
-      E: {
-        title: 'Upper Balance + Conditioning',
-        focus: 'Upper-back + light conditioning',
-        moves: [
-          ['Assisted Dip Machine / Cable-assisted dip', '3 x 8-10'],
-          ['Chest Press (lighter), controlled', '2 x 12'],
-          ['Cable Row', '3 x 10'],
-          ['Rear Delt Fly', '2 x 15'],
-          ['Hammer Curl', '3 x 12'],
-          ['Treadmill walk/jog + cooldown', '12 min']
-        ]
-      }
-    };
-
-    const warmups = [
-      ['Treadmill walk', '3-5 min'],
-      ['Hip hinge drill', '2 x 10'],
-      ['Bodyweight box squat', '2 x 10'],
-      ['Band pull-apart', '2 x 15'],
-      ['Scapular retraction wall drill', '2 x 10'],
-      ['Neck chin tucks', '2 x 10']
-    ];
-
-    const exerciseVideos = [
-      {exercise:'Leg Press', primary:'https://www.youtube.com/watch?v=p5dCqF7wWUw', primaryNote:'Machine setup + depth control', backup:'https://www.youtube.com/watch?v=VFk3RzndUEc', backupNote:'Angled leg press setup'},
-      {exercise:'Goblet Squat', primary:'https://www.youtube.com/watch?v=9KzZD_n2r64', primaryNote:'Beginner-safe pattern', backup:'https://www.youtube.com/watch?v=0OWbS1WiUGU', backupNote:'Form checkpoints'},
-      {exercise:'Romanian Deadlift', primary:'https://www.youtube.com/watch?v=5zmlnbWb-g4', primaryNote:'Hinge mechanics', backup:'https://www.youtube.com/watch?v=hCDzSR6bW10', backupNote:'Deadlift checklist'},
-      {exercise:'Seated Leg Curl', primary:'https://www.youtube.com/watch?v=t9sTSr-JYSs', primaryNote:'Machine positioning', backup:'https://www.youtube.com/watch?v=IOufFLwNOTU', backupNote:'Technogym curl tutorial'},
-      {exercise:'Incline Dumbbell Press', primary:'https://www.youtube.com/watch?v=IP4oeKh1Sd4', primaryNote:'Shoulder-safe trajectory', backup:'https://www.youtube.com/watch?v=QsYre__-aro', backupNote:'Form correction'},
-      {exercise:'Machine Chest Press', primary:'https://www.youtube.com/watch?v=zgP-UCKGe24', primaryNote:'Seat height + grip', backup:'https://www.youtube.com/watch?v=gNBU7hmW2EU', backupNote:'Beginner machine guide'},
-      {exercise:'Assisted Pull-up', primary:'https://www.youtube.com/watch?v=gx0RWT7WbmA', primaryNote:'Use the assist early', backup:'https://www.youtube.com/watch?v=lGCl8kVa6-c', backupNote:'Beginner pull-up guidance'},
-      {exercise:'Lat Pulldown', primary:'https://www.youtube.com/watch?v=SALxEARiMkw', primaryNote:'Common mistakes to avoid', backup:'https://www.youtube.com/watch?v=O94yEoGXtBY', backupNote:'Width and control'},
-      {exercise:'Face Pull', primary:'https://www.youtube.com/watch?v=ljgqer1ZpXg', primaryNote:'Posture cue', backup:'https://www.youtube.com/watch?v=0Po47vvj9g4', backupNote:'Shoulder prep drill'}
-    ];
-
-    const STORAGE_KEY = 'gymLogV3';
-
-    const painInput = document.getElementById('pain');
-    const painVal = document.getElementById('painVal');
-    painInput.addEventListener('input', () => painVal.textContent = painInput.value);
-
-    function getToday() {
-      const now = new Date();
-      const ist = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Kolkata' }));
-      const wd = ist.getDay();
-      const map = {1:'A',2:'B',3:'C',4:'D',5:'E',6:'A',0:'E'};
-      return {
-        day: map[wd],
-        date: ist.toLocaleDateString('en-IN', { weekday: 'long', month: 'short', day: 'numeric', year: 'numeric' }),
-        iso: ist.toISOString().split('T')[0]
-      };
+  return {
+    text: `Gym log (${t.label}, ${plan.day})\nName: ${who}\nDone: ${did}\nWhat: ${didWhat}\nMissed: ${missed}\nPain: ${pain}/10\nFeel: ${feel}\nNotes: ${notes}`,
+    row: {
+      date: `${t.label} (${plan.day})`,
+      who,
+      did,
+      didWhat,
+      missed,
+      pain,
+      feel,
+      notes
     }
+  };
+}
 
-    function renderToday() {
-      const {day, date} = getToday();
-      const d = routine[day];
+function handleSave(e) {
+  e.preventDefault();
+  const who = document.getElementById('who').value.trim();
+  if (!who) {
+    document.getElementById('status').textContent = 'Add a name first.';
+    return;
+  }
+  const payload = formToText();
+  addLog(payload.row);
+  document.getElementById('status').textContent = `Saved for ${payload.row.who} on ${payload.row.date}.`;
+  document.getElementById('logForm').reset();
+  document.getElementById('pain').value = 0;
+}
 
-      const todayCard = document.getElementById('todayCard');
-      todayCard.innerHTML = `
-        <h2 style="font-size:1.2rem">Today: Day ${day}</h2>
-        <p class="small muted"><span class="k">${date}</span> · <span class="pill">IST local</span></p>
-        <p class="small"><b>${d.title}</b> — ${d.focus}</p>
-        <div class="chiprow">
-          <span class="chip">Target sets: 3 each</span>
-          <span class="chip">RPE 6–7</span>
-          <span class="chip">Session ≤ 60 min</span>
-        </div>
-        <p class="small muted" style="margin-top:10px">If any move hurts, reduce range and keep the movement pain-free, or switch to backup video.</p>
-      `;
+function copyReport() {
+  const payload = formToText();
+  navigator.clipboard.writeText(payload.text).then(() => {
+    document.getElementById('status').textContent = 'Copied to clipboard. Paste in Telegram.';
+  }).catch(() => {
+    alert(payload.text);
+    document.getElementById('status').textContent = 'Clipboard blocked. I showed the text to copy manually.';
+  });
+}
 
-      document.getElementById('todaySummary').innerHTML = `<b>${d.title}</b>: ${d.focus}`;
+function downloadCSV() {
+  const logs = loadLogs();
+  const head = ['Date','Name','Done','Did','Missed','Pain','Feel','Notes'];
+  const esc = (v='') => `"${String(v).replaceAll('"','""')}"`;
+  const csv = [head.map(esc).join(','), ...logs.map(r => [r.date,r.who,r.did,r.didWhat,r.missed,r.pain,r.feel,r.notes].map(esc).join(','))].join('\n');
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `gym-log-${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+}
 
-      const plan = document.getElementById('plan');
-      plan.innerHTML = d.moves.map(([name, cue]) => `
-        <div class="vidcard">
-          <span class="k">${name}</span>
-          <span class="small muted">${cue}</span>
-        </div>`).join('');
-
-      const warm = document.getElementById('warmup');
-      warm.innerHTML = `<ul>${warmups.map(([n,c]) => `<li>${n} <span class="small muted">(${c})</span></li>`).join('')}</ul>`;
-
-      document.getElementById('exercises').innerHTML = exerciseVideos.map(v => `
-        <div class="card vidcard">
-          <div class="k">${v.exercise}</div>
-          <div class="small"><a href="${v.primary}" target="_blank">Primary</a> · ${v.primaryNote}</div>
-          <div class="small"><a href="${v.backup}" target="_blank">Backup</a> · ${v.backupNote}</div>
-        </div>
-      `).join('');
-    }
-
-    function getLogs() {
-      try {
-        return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
-      } catch { return []; }
-    }
-
-    function setLogs(logs) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(logs));
-      renderLogs();
-    }
-
-    function renderLogs() {
-      const tbody = document.getElementById('logBody');
-      const logs = getLogs().slice(0, 20);
-      if (!logs.length) {
-        tbody.innerHTML = '<tr><td colspan="7"><div class="empty">No logs yet. Save one above.</div></td></tr>';
-        return;
-      }
-      tbody.innerHTML = logs.map(l => `
-        <tr>
-          <td>${l.date}</td>
-          <td>${l.name}</td>
-          <td>${l.done}</td>
-          <td>${l.whatDid}</td>
-          <td>${l.whatNot}</td>
-          <td>${l.pain}</td>
-          <td>${l.notes}</td>
-        </tr>
-      `).join('');
-    }
-
-    function escapeCSV(v) {
-      return '"' + String(v ?? '').replaceAll('"', '""') + '"';
-    }
-
-    function handleSubmit(e) {
-      e.preventDefault();
-      const {date, day} = getToday();
-      const logs = getLogs();
-      const entry = {
-        date: `${date} (Day ${day})`,
-        name: document.getElementById('name').value.trim() || 'Adi',
-        done: document.getElementById('done').value,
-        whatDid: document.getElementById('whatDid').value.trim() || '—',
-        whatNot: document.getElementById('whatNot').value.trim() || '—',
-        pain: document.getElementById('pain').value,
-        feels: document.getElementById('feels').value,
-        notes: document.getElementById('notes').value.trim() || '—'
-      };
-
-      logs.unshift(entry);
-      setLogs(logs.slice(0, 150));
-
-      const st = document.getElementById('logStatus');
-      st.className = 'status ok';
-      st.textContent = `Saved for ${entry.name} on ${date}.`;
-
-      document.getElementById('logForm').reset();
-      painVal.textContent = '0';
-    }
-
-    function copyReport() {
-      const {date, day} = getToday();
-      const n = document.getElementById('name').value.trim() || 'Adi';
-      const d = document.getElementById('done').value;
-      const did = document.getElementById('whatDid').value.trim() || '—';
-      const missed = document.getElementById('whatNot').value.trim() || '—';
-      const feels = document.getElementById('feels').value;
-      const pain = document.getElementById('pain').value;
-      const notes = document.getElementById('notes').value.trim() || '—';
-      const copyText = `Gym log (${date}, Day ${day})\nName: ${n}\nDid today: ${d}\nWhat did: ${did}\nMissed: ${missed}\nHow did it feel: ${feels}\nPain: ${pain}/10\nNotes: ${notes}`;
-      navigator.clipboard.writeText(copyText).then(() => {
-        const st = document.getElementById('logStatus');
-        st.className = 'status ok';
-        st.textContent = 'Report copied — paste directly into Telegram.';
-      }).catch(() => {
-        const st = document.getElementById('logStatus');
-        st.className = 'status warn';
-        st.textContent = 'Copy blocked by browser. Use the text above by opening DevTools quick copy.';
-        alert(copyText);
-      });
-    }
-
-    function downloadCSV() {
-      const logs = getLogs();
-      if (!logs.length) {
-        document.getElementById('logStatus').textContent = 'No logs to download yet.';
-        return;
-      }
-      const header = ['Date', 'Name', 'Done', 'WhatDid', 'WhatNot', 'Pain', 'Feels', 'Notes'];
-      const rows = logs.map((l) => [l.date, l.name, l.done, l.whatDid, l.whatNot, l.pain, l.feels, l.notes].map(escapeCSV).join(','));
-      const csv = [header.map(escapeCSV).join(','), ...rows].join('\n');
-      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-      const link = document.createElement('a');
-      link.href = URL.createObjectURL(blob);
-      link.download = `gym_logs_${new Date().toISOString().slice(0,10)}.csv`;
-      link.click();
-    }
-
-    function installListeners() {
-      document.getElementById('logForm').addEventListener('submit', handleSubmit);
-      document.getElementById('copyBtn').addEventListener('click', copyReport);
-      document.getElementById('downloadBtn').addEventListener('click', downloadCSV);
-    }
-
-    renderToday();
-    installListeners();
-    renderLogs();
-  </script>
+renderToday();
+renderLogs();
+document.getElementById('logForm').addEventListener('submit', handleSave);
+document.getElementById('copyBtn').addEventListener('click', copyReport);
+document.getElementById('csvBtn').addEventListener('click', downloadCSV);
+</script>
 </body>
 </html>
