@@ -3,318 +3,383 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Gym Progress Hub</title>
+  <title>Adi & Partner Gym Hub</title>
   <style>
     :root {
       --bg: #070b12;
-      --panel: #121823;
-      --panel-2: #171f2b;
-      --ink: #e9eef8;
-      --muted: #8ea0ba;
-      --line: #263248;
-      --accent: #6ab5ff;
-      --accent-2: #80e3d0;
-      --good: #7ef09e;
-      --warn: #ffdd80;
-      --bad: #ff8b9a;
-      --shadow: 0 12px 30px rgba(0,0,0,0.28);
+      --card: #121823;
+      --card2: #171f2b;
+      --ink: #ecf2ff;
+      --muted: #95a9c7;
+      --line: #273350;
+      --accent: #5cb2ff;
+      --accent2: #33d2b7;
+      --good: #7ff4a5;
+      --warn: #ffd166;
+      --bad: #ff8ea2;
+      --shadow: 0 12px 30px rgba(0,0,0,.32);
     }
     * { box-sizing: border-box; }
-    html, body { margin: 0; padding: 0; }
-    body {
-      font-family: Inter, 'Segoe UI', Arial, sans-serif;
+    html, body {
+      margin: 0;
+      padding: 0;
       color: var(--ink);
       background:
-        radial-gradient(900px 300px at 12% -10%, rgba(106,181,255,.18), transparent 45%),
-        radial-gradient(700px 260px at 90% 0%, rgba(128,227,208,.16), transparent 50%),
+        radial-gradient(900px 320px at 5% -10%, rgba(92,178,255,.24), transparent 42%),
+        radial-gradient(760px 280px at 100% 0%, rgba(56,236,213,.17), transparent 48%),
         var(--bg);
-      min-height: 100vh;
-      padding: 22px 16px 36px;
+      font-family: Inter, 'Segoe UI', Arial, sans-serif;
     }
-    .app {
-      max-width: 1120px;
-      margin: 0 auto;
-    }
-    .top {
+    body { min-height: 100vh; }
+    .app { max-width: 980px; margin: 0 auto; padding: 16px; }
+
+    .toolbar {
       display: flex;
-      flex-wrap: wrap;
-      gap: 14px;
-      justify-content: space-between;
       align-items: center;
-      margin-bottom: 14px;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
     }
-    h1, h2, h3 {
-      margin: 0;
-      line-height: 1.2;
-      letter-spacing: 0.2px;
-    }
-    .sub {
-      color: var(--muted);
-      margin-top: 4px;
-    }
+    h1,h2,h3 { margin: 0 0 7px; }
+    p { margin: 0; }
+    .sub { color: var(--muted); }
+
     .card {
-      background: linear-gradient(180deg, var(--panel), var(--panel-2));
+      background: linear-gradient(180deg, var(--card), var(--card2));
       border: 1px solid var(--line);
       border-radius: 16px;
       padding: 14px;
+      margin-bottom: 12px;
       box-shadow: var(--shadow);
-      margin-bottom: 14px;
     }
+    .kicker {
+      color: #9fb8de;
+      text-transform: uppercase;
+      letter-spacing: .9px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
     .grid {
       display: grid;
       grid-template-columns: 1fr;
-      gap: 14px;
-    }
-    @media (min-width: 900px) {
-      .grid {
-        grid-template-columns: 1fr 1fr;
-      }
-    }
-    .kicker {
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      color: #9db7df;
-      font-weight: 700;
-    }
-    .chip {
-      border: 1px solid #2f3e5f;
-      border-radius: 999px;
-      padding: 5px 10px;
-      background: #0e1825;
-      color: #a1d3ff;
-      font-size: 12px;
-      white-space: nowrap;
+      gap: 12px;
     }
     .row {
       display: flex;
-      gap: 10px;
-      align-items: baseline;
       justify-content: space-between;
+      align-items: baseline;
+      gap: 10px;
       flex-wrap: wrap;
     }
-    ul { margin: 8px 0 0 18px; padding: 0; color: #d9e3f2; }
-    li { margin: 7px 0; }
-    .muted { color: var(--muted); font-size: 13px; }
-    .label {
-      display: block;
-      color: #b5c3d7;
-      font-weight: 600;
-      margin: 8px 0 6px;
+    .chip {
+      border: 1px solid #2f4060;
+      background: #0c1624;
+      color: #a9d9ff;
+      border-radius: 999px;
+      padding: 5px 9px;
+      white-space: nowrap;
+      font-size: 12px;
+    }
+
+    ul { margin: 8px 0 0 18px; padding: 0; }
+    li { margin: 6px 0; }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-top: 10px;
+    }
+    .stat {
+      background: #0c1624;
+      border: 1px solid #273350;
+      border-radius: 10px;
+      padding: 9px;
       font-size: 13px;
     }
-    input, select, textarea, button {
-      border-radius: 10px;
-      border: 1px solid #2f3f5f;
-      background: #0d1420;
-      color: var(--ink);
+    .stat b { font-size: 18px; display: block; margin-top: 2px; }
+
+    .motivation {
+      border-left: 4px solid var(--accent2);
+      background: linear-gradient(90deg, rgba(51,210,183,.14), rgba(51,210,183,.01));
       padding: 10px;
-      font-size: 14px;
-      width: 100%;
-      transition: border-color .2s ease, background .2s ease;
+      border-radius: 10px;
+      color: #c6fae4;
+      margin-top: 8px;
     }
-    textarea { min-height: 72px; resize: vertical; }
-    input:focus, select:focus, textarea:focus {
-      outline: none;
-      border-color: var(--accent);
-      background: #101a2a;
+
+    .muted { color: var(--muted); font-size: 13px; }
+
+    .label {
+      display: block;
+      margin: 8px 0 6px;
+      color: #b5c4d7;
+      font-weight: 600;
+      font-size: 13px;
     }
-    .btn {
-      border: none;
-      margin-top: 10px;
-      background: linear-gradient(180deg, #5eb2ff, #3180ff);
-      color: #fff;
-      cursor: pointer;
-      font-weight: 700;
-      letter-spacing: 0.2px;
-    }
-    .btn.alt { background: linear-gradient(180deg, #3fe2c2, #19b59d); }
-    .btn.muted { background: #1a2433; border: 1px solid #34445f; }
-    .btn:hover { filter: brightness(1.08); }
-    .btn:active { transform: translateY(1px); }
-    .actions { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 8px; }
-    @media (max-width: 640px) {
-      .actions { grid-template-columns: 1fr; }
-    }
-    .small { font-size: 12px; color: var(--muted); }
     .form-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 10px;
     }
-    @media (max-width: 680px) { .form-grid { grid-template-columns: 1fr; } }
-    .kpi {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-      margin-top: 10px;
-    }
-    .kpi-card {
-      background: #0b1320;
-      border: 1px solid #273650;
-      border-radius: 12px;
+    .field { margin-top: 4px; }
+    input, select, textarea, button {
+      width: 100%;
+      border-radius: 10px;
+      border: 1px solid #2f3d5a;
+      background: #0d1420;
+      color: var(--ink);
       padding: 10px;
+      font-size: 16px;
+      line-height: 1.25;
+      -webkit-appearance: none;
+      appearance: none;
     }
-    .kpi-card b { font-size: 20px; display: block; }
-    .log-head {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+    textarea { min-height: 74px; resize: vertical; }
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+      background: #111a2a;
+    }
+
+    .actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+    .actions.single { grid-template-columns: 1fr; }
+    button {
+      border: none;
+      font-weight: 700;
+      font-size: 15px;
+      cursor: pointer;
+      letter-spacing: 0.2px;
+      min-height: 44px;
+    }
+    .btnPrimary { background: linear-gradient(180deg,#63b8ff,#3281ff); color: #fff; }
+    .btnSecondary { background: linear-gradient(180deg,#39dbc0,#2abda3); color: #fff; }
+    .btnGhost { background: #1a2433; border: 1px solid #2f415f; }
+    .btnGhost:active, .btnPrimary:active, .btnSecondary:active { transform: translateY(1px); }
+
+    .status { min-height: 22px; color: #8ed2ff; font-size: 13px; margin-top: 8px; }
+
+    .logList {
+      display: grid;
       gap: 8px;
+      max-height: 360px;
+      overflow: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    .logItem {
+      border: 1px solid #27324a;
+      background: #0b1220;
+      border-radius: 10px;
+      padding: 8px;
+      font-size: 13px;
+    }
+    .logItem .meta { color: #8bb0de; font-size: 12px; }
+    .logItem .name { font-weight: 700; }
+    .pill {
+      display: inline-block;
+      background: #112033;
+      border: 1px solid #2a4266;
+      color: #9fc7ff;
+      border-radius: 999px;
+      padding: 2px 8px;
+      font-size: 11px;
+      margin-left: 8px;
+    }
+
+    .sharebox {
+      display: grid;
+      gap: 10px;
+    }
+    .share {
+      border: 1px dashed #2f4365;
+      background: #0a1421;
+      border-radius: 10px;
+      padding: 10px;
+      font-size: 13px;
+      word-break: break-word;
+      color: #d3def0;
+    }
+
+    @media (min-width: 920px) {
+      .app { padding: 24px 16px; }
+      .grid { grid-template-columns: 1fr 1fr; }
+      .actions { grid-template-columns: 1fr 1fr 1fr; }
+      .tableWrap { display: none; }
+      .logListWrap { display: block; }
+    }
+
+    @media (max-width: 680px) {
+      .form-grid { grid-template-columns: 1fr; }
+      .stats { grid-template-columns: 1fr 1fr; }
+      .stat { font-size: 12px; }
+      .actions { grid-template-columns: 1fr; }
+    }
+
+    .tableWrap {
+      overflow: auto;
+      border-radius: 10px;
+      border: 1px solid #273350;
     }
     table {
       width: 100%;
+      min-width: 760px;
       border-collapse: collapse;
-      font-size: 13px;
-      table-layout: fixed;
+      font-size: 12px;
     }
     th, td {
-      border-bottom: 1px solid #273350;
-      padding: 8px 6px;
-      vertical-align: top;
       text-align: left;
-      word-wrap: break-word;
+      padding: 8px 6px;
+      border-bottom: 1px solid #273250;
+      vertical-align: top;
+      word-break: break-word;
     }
     th {
       position: sticky;
       top: 0;
-      background: #101b2b;
-      color: #adc0de;
+      color: #b0c2dd;
+      background: #111a2a;
       font-weight: 700;
-      font-size: 12px;
     }
-    .status {
-      color: #91ddff;
-      margin-top: 8px;
-      min-height: 20px;
-      font-size: 13px;
+
+    .mini {
+      font-size: 11px;
+      color: #88a4ca;
     }
     .footer {
       text-align: center;
-      margin-top: 16px;
       color: var(--muted);
       font-size: 12px;
+      padding: 12px 0 20px;
     }
   </style>
 </head>
 <body>
   <div class="app">
-    <section class="top">
+    <div class="toolbar">
       <div>
         <h1>Gym Progress Hub</h1>
-        <div class="sub">Clean daily check-in for both of you. Fast form, fast logging, fast progress.</div>
+        <p class="sub">Mobile-first dashboard for daily logs + workouts. Built for consistency.</p>
       </div>
-      <div class="chip" id="dayChip">Loading...</div>
-    </section>
-
-    <section class="grid" id="today"></section>
+      <div class="chip" id="dayChip">Loading…</div>
+    </div>
 
     <section class="grid">
+      <div class="card" id="today"></div>
       <div class="card">
-        <div class="kicker">Quick workout flow</div>
-        <h3>Today's plan</h3>
-        <div id="planArea"></div>
-        <div class="kpi" id="kpis"></div>
+        <div class="kicker">Ready to move</div>
+        <h3>Workout focus</h3>
+        <div id="planArea" class="muted"></div>
+        <div class="stats" id="kpis"></div>
+        <div class="motivation" id="motivation"></div>
       </div>
-      <div class="card">
-        <div class="kicker">Quick prep</div>
-        <h3>5 minute warm-up</h3>
-        <ul id="warmupArea"></ul>
-      </div>
+    </section>
+
+    <section class="card">
+      <div class="kicker">Warm-up</div>
+      <h3>2–5 min prep</h3>
+      <ul id="warmupArea"></ul>
     </section>
 
     <section class="card" id="logCard">
       <div class="row">
-        <h2>Daily Progress Log</h2>
-        <span class="chip">No login • works on phone + desktop</span>
+        <div>
+          <h2>Quick daily log</h2>
+          <p class="sub">Fast prompts for both of you. No login. Works on mobile.</p>
+        </div>
+        <div class="chip">Auto-save local</div>
       </div>
-      <div class="muted">Flow: Did you do it? What did you do? What didn’t you do? pain score 0–10. Then save.</div>
 
       <form id="logForm">
         <div class="form-grid">
-          <div>
+          <div class="field">
             <label class="label" for="who">Who is logging?</label>
-            <input id="who" list="whoList" required placeholder="Adi / her name" />
+            <input id="who" list="whoList" placeholder="Adi / partner" required>
             <datalist id="whoList">
-              <option value="Adi" />
-              <option value="Partner" />
+              <option value="Adi"></option>
+              <option value="Partner"></option>
             </datalist>
           </div>
-          <div>
+          <div class="field">
             <label class="label" for="did">Did you train today?</label>
             <select id="did" required>
-              <option value="Yes">Yes</option>
-              <option value="Partially">Partially</option>
-              <option value="No">No</option>
+              <option>Yes</option>
+              <option>Partially</option>
+              <option>No</option>
             </select>
           </div>
         </div>
 
-        <label class="label" for="done">What did you do?</label>
-        <textarea id="done" placeholder="Exercises + sets/reps or summary"></textarea>
+        <label class="label" for="done">What did you do? (short)</label>
+        <textarea id="done" placeholder="Exercises, sets/reps"></textarea>
 
-        <label class="label" for="missed">What did you not complete?</label>
-        <textarea id="missed" placeholder="Missed exercises, time issue, energy, pain, equipment"></textarea>
+        <label class="label" for="missed">What was skipped?</label>
+        <textarea id="missed" placeholder="Missed move / time issue / pain"></textarea>
 
         <div class="form-grid">
-          <div>
-            <label class="label" for="pain">Pain / stiffness (0 to 10)</label>
-            <input id="pain" type="number" min="0" max="10" step="1" value="0" />
+          <div class="field">
+            <label class="label" for="pain">Pain or stiffness (0–10)</label>
+            <input id="pain" type="number" min="0" max="10" step="1" value="0">
           </div>
-          <div>
-            <label class="label" for="feel">Workout feel</label>
+          <div class="field">
+            <label class="label" for="feel">How did it feel?</label>
             <select id="feel">
               <option>Easy</option>
-              <option selected>Good</option>
+              <option selected>Fine</option>
+              <option>Hard</option>
               <option>Tough</option>
-              <option>Painful</option>
             </select>
           </div>
         </div>
 
-        <label class="label" for="notes">Extra notes</label>
-        <textarea id="notes" placeholder="Any observation: range, hunger, sleep, confidence"></textarea>
+        <label class="label" for="notes">Notes</label>
+        <textarea id="notes" placeholder="Any signal from body/mood/energy"></textarea>
 
         <div class="actions">
-          <button class="btn" type="submit">Save check-in</button>
-          <button class="btn alt" type="button" id="copyBtn">Copy summary for Telegram</button>
-          <button class="btn muted" type="button" id="csvBtn">Download CSV</button>
+          <button class="btnPrimary" type="submit">Save check-in</button>
+          <button class="btnSecondary" type="button" id="copyBtn">Copy Telegram summary</button>
+          <button class="btnGhost" type="button" id="csvBtn">Download CSV</button>
         </div>
         <div class="status" id="status"></div>
       </form>
     </section>
 
     <section class="card">
-      <div class="log-head">
-        <h3>Recent logs</h3>
-        <span class="small">Stored on this browser only (shared on same account/device).</span>
+      <div class="kicker">Recent logs</div>
+      <h3>Last entries</h3>
+      <div class="tableWrap">
+        <div class="tableWrapInner">
+          <table>
+            <thead>
+              <tr>
+                <th style="width:130px">Date</th>
+                <th style="width:100px">Name</th>
+                <th style="width:80px">Done</th>
+                <th>Did</th>
+                <th>Skipped</th>
+                <th style="width:60px">Pain</th>
+                <th>Notes</th>
+              </tr>
+            </thead>
+            <tbody id="logRows"></tbody>
+          </table>
+        </div>
       </div>
-      <div style="overflow:auto; max-height: 340px;">
-        <table>
-          <thead>
-            <tr>
-              <th style="width: 130px;">Date</th>
-              <th style="width: 95px;">Name</th>
-              <th style="width: 80px;">Done</th>
-              <th style="width: 210px;">Did</th>
-              <th style="width: 220px;">Skipped / Missing</th>
-              <th style="width: 70px;">Pain</th>
-              <th>Notes</th>
-            </tr>
-          </thead>
-          <tbody id="logRows"></tbody>
-        </table>
-      </div>
+      <div id="logCards" class="logList"></div>
     </section>
 
     <section class="card">
-      <h3>Open anywhere</h3>
-      <div class="kicker">Use this URL anywhere (phone, laptop, office Wi-Fi, travels)</div>
-      <p class="muted">https://clawbot-adi.github.io/adi-gym-trainer-hub/</p>
-      <p class="muted">Keep this open: you and your partner can both log from this shared page in real time in your current browser context.</p>
+      <div class="kicker">Open from anywhere</div>
+      <h3>Public link</h3>
+      <div class="sharebox">
+        <div class="share">https://clawbot-adi.github.io/adi-gym-trainer-hub/</div>
+        <p class="sub">The same link works on your phone, laptop, or random Wi-Fi.</p>
+      </div>
+      <div class="muted mini">Note: browser logs are device-local. If both of you need one shared source-of-truth, I can add cloud sync next.</div>
     </section>
 
-    <div class="footer">Built for daily consistency, not perfection. Keep it boring, keep it done.</div>
+    <div class="footer">Keep the streak alive. Even 15 mins done is still a win.</div>
   </div>
 
 <script>
@@ -330,7 +395,7 @@ const routine = {
       ['Side Plank', '3 x 20–30 sec each'],
       ['Dead Bug', '3 x 8 each side']
     ],
-    targetMins: '45-55'
+    target: '45-55'
   },
   B: {
     day: 'Day B — Push',
@@ -343,7 +408,7 @@ const routine = {
       ['Rope Triceps Pushdown', '3 x 12'],
       ['Push-up (knees / elevated)', '2 x AMRAP quality']
     ],
-    targetMins: '45-55'
+    target: '45-55'
   },
   C: {
     day: 'Day C — Pull',
@@ -356,7 +421,7 @@ const routine = {
       ['Face Pull', '3 x 15'],
       ['Bicep Curl', '3 x 10–12']
     ],
-    targetMins: '45-55'
+    target: '45-55'
   },
   D: {
     day: 'Day D — Legs + Glutes + Core',
@@ -369,7 +434,7 @@ const routine = {
       ['Pallof Press', '3 x 10 each'],
       ['Plank', '3 x 30–40 sec']
     ],
-    targetMins: '45-55'
+    target: '45-55'
   },
   E: {
     day: 'Day E — Upper Balance + Conditioning',
@@ -382,7 +447,7 @@ const routine = {
       ['Treadmill Walk/Jog', '12 min'],
       ['Cool-down mobility', '5 min']
     ],
-    targetMins: '40-50'
+    target: '40-50'
   }
 };
 
@@ -395,18 +460,16 @@ const warmup = [
   'Neck chin tucks 2 x 10'
 ];
 
-const STORAGE = 'gym_hub_logs_v2';
+const STORAGE = 'gym_hub_logs_v3';
 
 function todayInIST() {
   const now = new Date();
   const ist = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Kolkata' }));
   const wd = ist.getDay();
-  const map = {1:'A',2:'B',3:'C',4:'D',5:'E',6:'A',0:'E'};
-  const day = map[wd];
+  const map = {1: 'A', 2: 'B', 3: 'C', 4: 'D', 5: 'E', 6: 'A', 0: 'E'};
   return {
-    key: day,
-    label: ist.toLocaleDateString('en-IN', { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' }),
-    iso: ist.toISOString().slice(0,10)
+    key: map[wd],
+    label: ist.toLocaleDateString('en-IN', { weekday:'long', year:'numeric', month:'short', day:'numeric' }),
   };
 }
 
@@ -414,9 +477,7 @@ function loadLogs() {
   try { return JSON.parse(localStorage.getItem(STORAGE) || '[]'); } catch { return []; }
 }
 
-function saveAll(logs) {
-  localStorage.setItem(STORAGE, JSON.stringify(logs.slice(0, 120)));
-}
+function saveAll(logs) { localStorage.setItem(STORAGE, JSON.stringify(logs.slice(0, 120))); }
 
 function addLog(entry) {
   const logs = loadLogs();
@@ -425,93 +486,101 @@ function addLog(entry) {
   renderLogs();
 }
 
+function motivationLine(dayKey) {
+  const map = {
+    A: "Lower body first. Move slow, own your tempo.",
+    B: "Upper day. Keep shoulders stacked, control the stack.",
+    C: "Pull day. Don't rush your reps, pull with chest up.",
+    D: "Posterior chain confidence builds with consistency.",
+    E: "Condition day: finish cleaner than you start."
+  };
+  return map[dayKey] || "Keep it simple, keep it moving.";
+}
+
 function renderToday() {
   const t = todayInIST();
-  const plan = routine[t.key];
+  const p = routine[t.key];
 
-  document.getElementById('dayChip').textContent = `IST: ${t.label} • ${plan.day}`;
+  document.getElementById('dayChip').textContent = `IST: ${t.label}`;
 
-  const today = document.createElement('div');
-  today.className = 'card';
-  today.innerHTML = `
+  document.getElementById('today').innerHTML = `
+    <div class="kicker">Today's session</div>
     <div class="row">
       <div>
-        <div class="kicker">Today's session</div>
-        <h2>${plan.day}</h2>
-        <div class="muted">${plan.title}</div>
+        <h3>${p.day}</h3>
+        <p class="muted">${p.title}</p>
       </div>
-      <div class="chip">Target ${plan.targetMins}</div>
+      <span class="chip">${p.target} min</span>
     </div>
-    <ul>${plan.main.map(x => `<li><b>${x[0]}</b> — ${x[1]}</li>`).join('')}</ul>
+    <ul>${p.main.map(m => `<li><strong>${m[0]}</strong> — ${m[1]}</li>`).join('')}</ul>
+    <div class="stats">
+      <div class="stat">Movements <b>${p.main.length}</b></div>
+      <div class="stat">Rest window <b>60-90 s</b></div>
+      <div class="stat">Effort target <b>RPE 6-7</b></div>
+    </div>
+    <div class="motivation">${motivationLine(t.key)}</div>
   `;
 
-  const split = document.createElement('div');
-  split.className = 'card';
-  split.innerHTML = `
-    <div class="kicker">Guidelines</div>
-    <h2>How to keep it real</h2>
-    <ul>
-      <li>RPE 6-7, crisp control, no ego reps.</li>
-      <li>Rests 60–90 seconds.</li>
-      <li>Stop if form collapses or pain starts to worsen.</li>
-      <li>Keep sessions under 60 minutes including warm-up.</li>
-    </ul>
-  `;
-
-  const planArea = document.getElementById('today');
-  planArea.innerHTML = '';
-  planArea.appendChild(today);
-  planArea.appendChild(split);
-
-  const planArea2 = document.getElementById('planArea');
-  planArea2.innerHTML = `<div class='muted'>Primary work this session:</div><ul>${plan.main.map(x=>`<li>${x[0]} · ${x[1]}</li>`).join('')}</ul>`;
-
-  document.getElementById('warmupArea').innerHTML = warmup.map(x=>`<li>${x}</li>`).join('');
+  document.getElementById('planArea').innerHTML = `<ul>${p.main.map(x => `<li>${x[0]}  ·  ${x[1]}</li>`).join('')}</ul>`;
   document.getElementById('kpis').innerHTML = `
-    <div class="kpi-card"><div class="muted">Sets this plan</div><b>${plan.main.length}</b></div>
-    <div class="kpi-card"><div class="muted">Target time</div><b>${plan.targetMins} min</b></div>
-    <div class="kpi-card"><div class="muted">Status</div><b>Ready</b></div>
+    <div class="stat"><span class="muted">Warm-up</span><b>5-7 min</b></div>
+    <div class="stat"><span class="muted">Max gym time</span><b>60 min</b></div>
+    <div class="stat"><span class="muted">Guardrail</span><b>No pain push</b></div>
   `;
+  document.getElementById('warmupArea').innerHTML = warmup.map(w => `<li>${w}</li>`).join('');
 }
 
 function renderLogs() {
-  const rows = loadLogs();
+  const logs = loadLogs();
   const tbody = document.getElementById('logRows');
-  if (!rows.length) {
-    tbody.innerHTML = '<tr><td colspan="7" class="muted">No entries yet. Add first check-in above.</td></tr>';
+  const cards = document.getElementById('logCards');
+
+  if (!logs.length) {
+    tbody.innerHTML = '<tr><td colspan="7" class="muted">No entries yet.</td></tr>';
+    cards.innerHTML = '<div class="muted">No entries yet.</div>';
     return;
   }
-  tbody.innerHTML = rows.slice(0, 20).map(r => `
+
+  tbody.innerHTML = logs.slice(0, 40).map(r => `
     <tr>
       <td>${r.date}</td>
       <td>${r.who}</td>
       <td>${r.did}</td>
-      <td>${r.didWhat}</td>
+      <td>${r.done}</td>
       <td>${r.missed}</td>
       <td>${r.pain}</td>
       <td>${r.notes}</td>
     </tr>
   `).join('');
+
+  cards.innerHTML = logs.slice(0, 12).map(r => `
+    <div class="logItem">
+      <div class="meta"><span class="name">${r.who}</span><span class="pill">${r.did}</span> • ${r.date}</div>
+      <div class="mini"><strong>Did:</strong> ${r.done}</div>
+      <div class="mini"><strong>Skipped:</strong> ${r.missed}</div>
+      <div class="mini"><strong>Pain:</strong> ${r.pain}/10 • <strong>Notes:</strong> ${r.notes}</div>
+    </div>
+  `).join('');
 }
 
-function formToText() {
+function getFormPayload() {
   const t = todayInIST();
-  const plan = routine[t.key];
-  const who = document.getElementById('who').value.trim() || 'Adi';
+  const p = routine[t.key];
+  const who = document.getElementById('who').value.trim();
   const did = document.getElementById('did').value;
-  const didWhat = document.getElementById('done').value.trim() || '—';
+  const done = document.getElementById('done').value.trim() || '—';
   const missed = document.getElementById('missed').value.trim() || '—';
   const pain = document.getElementById('pain').value;
   const feel = document.getElementById('feel').value;
   const notes = document.getElementById('notes').value.trim() || '—';
 
   return {
-    text: `Gym log (${t.label}, ${plan.day})\nName: ${who}\nDone: ${did}\nWhat: ${didWhat}\nMissed: ${missed}\nPain: ${pain}/10\nFeel: ${feel}\nNotes: ${notes}`,
+    text: `Gym log (${t.label}, ${p.day})\nName: ${who}\nDid it: ${did}\nDid: ${done}\nSkipped: ${missed}\nPain: ${pain}/10\nFeel: ${feel}\nNotes: ${notes}`,
     row: {
-      date: `${t.label} (${plan.day})`,
+      date: `${t.label} (${p.day})`,
       who,
       did,
-      didWhat,
+      done,
       missed,
       pain,
       feel,
@@ -524,43 +593,48 @@ function handleSave(e) {
   e.preventDefault();
   const who = document.getElementById('who').value.trim();
   if (!who) {
-    document.getElementById('status').textContent = 'Add a name first.';
+    document.getElementById('status').textContent = 'Name is required.';
     return;
   }
-  const payload = formToText();
+  const payload = getFormPayload();
   addLog(payload.row);
-  document.getElementById('status').textContent = `Saved for ${payload.row.who} on ${payload.row.date}.`;
+  document.getElementById('status').textContent = `Saved for ${payload.row.who} • ${payload.row.date}`;
   document.getElementById('logForm').reset();
-  document.getElementById('pain').value = 0;
+  document.getElementById('pain').value = '0';
 }
 
 function copyReport() {
-  const payload = formToText();
+  const payload = getFormPayload();
   navigator.clipboard.writeText(payload.text).then(() => {
-    document.getElementById('status').textContent = 'Copied to clipboard. Paste in Telegram.';
+    document.getElementById('status').textContent = 'Summary copied. Paste into Telegram.';
   }).catch(() => {
     alert(payload.text);
-    document.getElementById('status').textContent = 'Clipboard blocked. I showed the text to copy manually.';
+    document.getElementById('status').textContent = 'Clipboard blocked. I showed the text.';
   });
 }
 
 function downloadCSV() {
   const logs = loadLogs();
-  const head = ['Date','Name','Done','Did','Missed','Pain','Feel','Notes'];
-  const esc = (v='') => `"${String(v).replaceAll('"','""')}"`;
-  const csv = [head.map(esc).join(','), ...logs.map(r => [r.date,r.who,r.did,r.didWhat,r.missed,r.pain,r.feel,r.notes].map(esc).join(','))].join('\n');
+  const head = ['Date','Name','Did','Done','Missed','Pain','Feel','Notes'];
+  const esc = v => `"${String(v).replaceAll('"', '""')}"`;
+  const rows = logs.map(r => [r.date, r.who, r.did, r.done, r.missed, r.pain, r.feel, r.notes].map(esc).join(','));
+  const csv = [head.map(esc).join(','), ...rows].join('\n');
   const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
-  a.download = `gym-log-${new Date().toISOString().slice(0,10)}.csv`;
+  a.download = `gym_log_${new Date().toISOString().slice(0, 10)}.csv`;
   a.click();
 }
 
-renderToday();
-renderLogs();
-document.getElementById('logForm').addEventListener('submit', handleSave);
-document.getElementById('copyBtn').addEventListener('click', copyReport);
-document.getElementById('csvBtn').addEventListener('click', downloadCSV);
+function init() {
+  renderToday();
+  renderLogs();
+  document.getElementById('logForm').addEventListener('submit', handleSave);
+  document.getElementById('copyBtn').addEventListener('click', copyReport);
+  document.getElementById('csvBtn').addEventListener('click', downloadCSV);
+}
+
+init();
 </script>
 </body>
 </html>
