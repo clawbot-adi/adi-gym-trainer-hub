@@ -4,31 +4,34 @@ Single HTML page with:
 - today's split day auto-calculated for IST
 - warm-up list
 - 5-day routine cards
-- one primary + one backup YouTube for key exercises
-- simple daily logging form
+- primary + backup video links
+- zero-friction daily logging flow
 - log history + CSV export
 
 ## Open
-- Permanent public link (works from anywhere):
+- Permanent public link (works anywhere):
   - `https://clawbot-adi.github.io/adi-gym-trainer-hub/`
+- Logging entry point:
+  - `https://clawbot-adi.github.io/adi-gym-trainer-hub/#log`
 - Local LAN fallback:
 ```bash
 python3 -m http.server 8080 --directory /root/gym_trainer_hub
 ```
 then open `http://localhost:8080`
 
-## Daily logging flow (no login)
-The page now asks the same quick flow for both of you:
-- Did you do this today?
-- What you did
-- What you couldn't do
-- Pain/stiffness score + notes
+## Daily logging flow (designed to be used)
+Goal: **< 30 seconds**.
 
-Use it 2 lines, save, and optionally press **Copy today's report** to paste directly in Telegram.
+1. Open the shared link.
+2. Pick name (Adi/Partner).
+3. Tap **Did you train today?**
+4. If Yes: tick completed moves (default on), add skipped/notes if any.
+5. Set pain score + feel, Save.
+6. Tap **Copy Telegram format** to paste directly.
 
 ## Share with partner
-- Send her the public link above and she can update logs from her phone/browser directly.
-- Both of you can also log by texting this pattern in Telegram and I can also keep a copy for us: `Did you do today's session?` etc.
+- Send this single link to her. She can open and log directly from her browser.
+- There is no login required and no extra setup.
 
 ## Update plan
 Edit `/root/gym_trainer_hub/index.html` to change exercises, timings, or video links.
