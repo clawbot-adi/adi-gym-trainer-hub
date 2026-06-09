@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Adi & Partner Gym Repository</title>
+  <style>
+    :root { --bg:#0f1115; --card:#171a20; --ink:#f5f7fb; --muted:#aeb6c3; --accent:#6cf; }
+    body { margin:0; padding:16px; font-family: Arial, Helvetica, sans-serif; background:var(--bg); color:var(--ink); }
+    h1,h2,h3 { margin:0 0 8px; }
+    .wrap { max-width: 980px; margin:0 auto; }
+    .sub { color:var(--muted); margin-bottom:16px; }
+    .grid { display:grid; grid-template-columns:1fr; gap:12px; }
+    @media (min-width:760px){ .grid { grid-template-columns:1fr 1fr; } }
+    .card { background:var(--card); border:1px solid #252a34; border-radius:12px; padding:14px; }
+    .row { display:flex; justify-content:space-between; gap:10px; align-items:baseline; }
+    .chip { background:#0b2a3a; color:#8ed8ff; padding:4px 8px; border-radius:999px; font-size:12px; white-space:nowrap; }
+    ul{ margin: 8px 0 0 18px; padding:0; }
+    li { margin: 6px 0; }
+    .video { margin:10px 0; }
+    .video a { color:#9ee4ff; text-decoration:none; }
+    .small { color:var(--muted); font-size:13px; }
+    .k { font-weight:700; }
+    .ok { color:#7cf48a; }
+    .warn { color:#ffd16f; }
+    button { margin-top:12px; background:#1f8eff; color:#fff; border:none; border-radius:8px; padding:10px 12px; cursor:pointer; }
+    .footer { margin-top:14px; color:var(--muted); font-size:12px; }
+    .muted-box{background:#111722; border-radius:10px; padding:10px; margin-top:8px; }
+    .split-day { font-size:14px; }
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Gym Starter Hub</h1>
+  <div class="sub">Built for 29.5y, ~175 lb beginner. One tap to know today’s workout + how-to videos.</div>
+
+  <div id="todayCard" class="card"></div>
+
+  <h2>Today’s workout</h2>
+  <div class="grid" id="plan"></div>
+
+  <h2>Quick 5-10 min Prep (tap and go)</h2>
+  <div class="grid" id="warmup"></div>
+
+  <h2>Exercise links (1x primary + 1x backup each)</h2>
+  <div id="exercises" class="grid"></div>
+
+  <h2>Share + host</h2>
+  <div class="card">
+    <p class="small">This is a local HTML repository you can share in Telegram / Drive. Start quickly with:</p>
+    <div class="muted-box small">
+      python3 -m http.server 8080 --directory /root/gym_trainer_hub<br/>
+      then open <b>http://localhost:8080</b> on your phone in same Wi-Fi / Tailscale.
+    </div>
+    <p class="small">Use one click to copy the link for your partner. If you want cloud hosting later, I can mirror it to GitHub Pages.</p>
+  </div>
+</div>
+
+<script>
+const routine = {
+  A: {
+    title: 'Day A — Lower + Core (Machine-safe, Beginner)',
+    moves: [
+      {name:'Leg Press (feet high, controlled depth)', cue:'3 x 8-12'},
+      {name:'Romanian Deadlift (dumbbells)', cue:'3 x 8-10'},
+      {name:'Goblet Squat (box/parallel)', cue:'3 x 8-10'},
+      {name:'Seated Leg Curl', cue:'3 x 10-12'},
+      {name:'Side Plank', cue:'3 x 20-30s each'},
+      {name:'Dead Bug', cue:'3 x 8 each side'}
+    ]
+  },
+  B: {
+    title: 'Day B — Push',
+    moves: [
+      {name:'Incline Dumbbell Press', cue:'3 x 8-10'},
+      {name:'Chest Press Machine', cue:'3 x 10-12'},
+      {name:'Dumbbell Shoulder Press', cue:'3 x 10'},
+      {name:'Dumbbell Lateral Raise', cue:'2 x 12'},
+      {name:'Rope Triceps Pushdown', cue:'3 x 12'},
+      {name:'Push-up (knees/elevated if needed)', cue:'2 x AMRAP quality'}
+    ]
+  },
+  C: {
+    title: 'Day C — Pull',
+    moves: [
+      {name:'Assisted Pull-up (lat bar attachment)', cue:'3 x 5-8'},
+      {name:'Lat Pulldown', cue:'3 x 8-12'},
+      {name:'Seated Cable Row', cue:'3 x 10'},
+      {name:'One-arm DB Row', cue:'3 x 10 each'},
+      {name:'Face Pull', cue:'3 x 15'},
+      {name:'Bicep Curl (DB)', cue:'3 x 10-12'}
+    ]
+  },
+  D: {
+    title: 'Day D — Legs + Glutes + Core',
+    moves: [
+      {name:'Leg Press (narrow stance)', cue:'3 x 10-12'},
+      {name:'Hip Thrust', cue:'3 x 10'},
+      {name:'Leg Extension', cue:'3 x 10-12'},
+      {name:'Seated Calf Raise', cue:'3 x 12-15'},
+      {name:'Pallof Press', cue:'3 x 10 each'},
+      {name:'Plank', cue:'3 x 30-40s'}
+    ]
+  },
+  E: {
+    title: 'Day E — Upper Balance + Conditioning',
+    moves: [
+      {name:'Assisted Dip Machine / Cable-assisted dip', cue:'3 x 8-10'},
+      {name:'Chest Press (lighter), controlled', cue:'2 x 12'},
+      {name:'Cable Row', cue:'3 x 10'},
+      {name:'Rear Delt Fly', cue:'2 x 15'},
+      {name:'Hammer Curl', cue:'3 x 12'},
+      {name:'Treadmill walk/jog + 1:45 min cool down', cue:'12 min'}
+    ]
+  }
+};
+
+const warmups = [
+  {name:'Treadmill walk', cue:'3–5 min, no incline'},
+  {name:'Hip hinge (stick/dowel drill)', cue:'2 x 10'},
+  {name:'Bodyweight box squat (shallow control)', cue:'2 x 10'},
+  {name:'Band pull-apart', cue:'2 x 15'},
+  {name:'Scapular retraction wall drill', cue:'2 x 10'},
+  {name:'Neck: gentle chin tucks', cue:'2 x 10'}
+];
+
+const exerciseVideos = [
+  {exercise:'Leg Press', primary:'https://www.youtube.com/watch?v=p5dCqF7wWUw', primaryNote:'How-to use seated leg press', backup:'https://www.youtube.com/watch?v=VFk3RzndUEc', backupNote:'Angled leg press setup'},
+  {exercise:'Goblet Squat', primary:'https://www.youtube.com/watch?v=9KzZD_n2r64', primaryNote:'Complete beginner guide', backup:'https://www.youtube.com/watch?v=0OWbS1WiUGU', backupNote:'Form checkpoints'},
+  {exercise:'Romanian Deadlift', primary:'https://www.youtube.com/watch?v=5zmlnbWb-g4', primaryNote:'Stop common RDL mistakes', backup:'https://www.youtube.com/watch?v=hCDzSR6bW10', backupNote:'Official deadlift checklist'},
+  {exercise:'Seated Leg Curl', primary:'https://www.youtube.com/watch?v=t9sTSr-JYSs', primaryNote:'Machine setup + setup points', backup:'https://www.youtube.com/watch?v=IOufFLwNOTU', backupNote:'Technogym seated curl tutorial'},
+  {exercise:'Leg Extension', primary:'https://www.youtube.com/watch?v=4ZDm5EbiFI8', primaryNote:'Quad-focused setup', backup:'https://www.youtube.com/watch?v=swZQC689o9U', backupNote:'How to use for best results'},
+  {exercise:'Seated Calf Raise', primary:'https://www.youtube.com/watch?v=6O5hh1rBtx8', primaryNote:'Controlled top pause', backup:'https://www.youtube.com/watch?v=BxfKOyI8sUg', backupNote:'PT guide'},
+  {exercise:'Incline Dumbbell Press', primary:'https://www.youtube.com/watch?v=IP4oeKh1Sd4', primaryNote:'2-min tutorial style', backup:'https://www.youtube.com/watch?v=QsYre__-aro', backupNote:'Mistake fix'},
+  {exercise:'Machine Chest Press', primary:'https://www.youtube.com/watch?v=zgP-UCKGe24', primaryNote:'Machine setup and chest path', backup:'https://www.youtube.com/watch?v=gNBU7hmW2EU', backupNote:'Beginner guide to chest-press machines'},
+  {exercise:'Dumbbell Shoulder Press', primary:'https://www.youtube.com/watch?v=5Y3VZsLb1Ys', primaryNote:'Shoulder-friendly setup', backup:'https://www.youtube.com/watch?v=O7ECGhZj_Hc', backupNote:'Flat bench pressing basics'},
+  {exercise:'Lateral Raise', primary:'https://www.youtube.com/watch?v=Kl3LEzQ5Zqs', primaryNote:'Set tension and ROM', backup:'https://www.youtube.com/watch?v=0Po47vvj9g4', backupNote:'Cable setup quick drill'},
+  {exercise:'Triceps Rope Pushdown', primary:'https://www.youtube.com/watch?v=vB5OHsJ3EME', primaryNote:'3 golden rules for rope form', backup:'https://www.youtube.com/watch?v=Rc7-euA8FDI', backupNote:'Common pushdown mistakes'},
+  {exercise:'Assisted Pull-up', primary:'https://www.youtube.com/watch?v=gx0RWT7WbmA', primaryNote:'Use this machine first', backup:'https://www.youtube.com/watch?v=lGCl8kVa6-c', backupNote:'Beginner guide'},
+  {exercise:'Lat Pulldown', primary:'https://www.youtube.com/watch?v=SALxEARiMkw', primaryNote:'Common mistakes avoid', backup:'https://www.youtube.com/watch?v=O94yEoGXtBY', backupNote:'Back training width/thickness'},
+  {exercise:'Seated Cable Row', primary:'https://www.youtube.com/watch?v=vwHG9Jfu4sw', primaryNote:'2-min row form guide', backup:'https://www.youtube.com/watch?v=7o2oolbmzeI', backupNote:'Perfect form focused'},
+  {exercise:'One-arm DB Row', primary:'https://www.youtube.com/watch?v=dFzUjzfih7k', primaryNote:'Single-arm row setup and trunk control', backup:'https://www.youtube.com/watch?v=7o2oolbmzeI', backupNote:'Seated cable row with tighter form controls'},
+  {exercise:'Face Pull', primary:'https://www.youtube.com/watch?v=ljgqer1ZpXg', primaryNote:'Shoulder posture essential', backup:'https://www.youtube.com/watch?v=0Po47vvj9g4', backupNote:'Cable setup quick drill'},
+  {exercise:'Bicep Curl', primary:'https://www.youtube.com/watch?v=R-8Sa0_qiws', primaryNote:'Machine preacher curl', backup:'https://www.youtube.com/watch?v=yTWO2th-RIY', backupNote:'Free-weight curl mistakes'},
+  {exercise:'Hammer Curl', primary:'https://www.youtube.com/watch?v=jjnJHhzZUUM', primaryNote:'Reduce elbow flare', backup:'https://www.youtube.com/watch?v=R-8Sa0_qiws', backupNote:'Preacher alt'},
+  {exercise:'Dead Bug', primary:'https://www.youtube.com/watch?v=GbSC02oU3To', primaryNote:'Core control, no back arch', backup:'https://www.youtube.com/watch?v=o4GKiEoYClI', backupNote:'PT-guided progression'},
+  {exercise:'Pallof Press', primary:'https://www.youtube.com/watch?v=nFspBRHke4w', primaryNote:'Anti-rotation with cable', backup:'https://www.youtube.com/watch?v=HXrLaqNIkTs', backupNote:'Quick alternative'},
+  {exercise:'Plank', primary:'https://www.youtube.com/watch?v=NXr4Fw8q60o', primaryNote:'Body-line control', backup:'https://www.youtube.com/watch?v=JbyjNymZOt0', backupNote:'Core activation cues'},
+  {exercise:'Assisted Dip Machine', primary:'https://www.youtube.com/watch?v=LH9iZNaO7oU', primaryNote:'Use if shoulders clean', backup:'https://www.youtube.com/watch?v=ogKeZ6vb1lo', backupNote:'Life Fitness setup and form'},
+  {exercise:'Glute Drive / Hip Thrust', primary:'https://www.youtube.com/watch?v=V74XWj9FXAc', primaryNote:'Hip thrust machine', backup:'https://www.youtube.com/watch?v=tztHvSLdXLA', backupNote:'Machine hip thrust fixes'},
+  {exercise:'Shoulder/Thoracic Prep', primary:'https://www.youtube.com/watch?v=hhvHpsxKjXw', primaryNote:'Thoracic mobility best 5 drills', backup:'https://www.youtube.com/watch?v=5wv670fHuG4', backupNote:'Upper back stiffness fix'}
+];
+
+function getTodayKey(){
+  const now = new Date();
+  const ist = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Kolkata' }));
+  const wd = ist.getDay();
+  const map = {1:'A',2:'B',3:'C',4:'D',5:'E',6:'A',0:'E'}; // Mon-Sun pattern
+  return {key:map[wd], date: ist.toLocaleDateString('en-IN', { weekday:'long', year:'numeric', month:'short', day:'numeric' })};
+}
+
+function render(){
+  const {key,date} = getTodayKey();
+  const d = routine[key];
+
+  const today = document.getElementById('todayCard');
+  today.className='card';
+  today.innerHTML = `<div class="row"><h3>Today (${date})</h3><span class="chip">Day ${key}</span></div><div class='split-day'>${d.title}</div><div class='muted-box small'>Target: 3 sets each, 8–12 reps mostly, RPE 6–7. Rest 60–90 sec. If a move irritates joints, skip and replace with the backup machine movement.</div>`;
+
+  const plan = document.getElementById('plan');
+  const warm = document.getElementById('warmup');
+  const exps = document.getElementById('exercises');
+  plan.innerHTML = `<div class=\"card\"><div class=\"row\"><h3>Main Workout</h3><span class=\"chip\">~45-50 min</span></div><ul>${d.moves.map(m=>`<li><span class='k'>${m.name}</span> — <span class='small'>${m.cue}</span></li>`).join('')}</ul><div class='small ok'>Keep each session under 60 minutes including warm-up.</div></div>`;
+
+  warm.innerHTML = `<div class=\"card\"><div class=\"row\"><h3>Warm-up (5-7 min)</h3><span class=\"chip\">Do this first</span></div><ul>${warmups.map(m=>`<li>${m.name} <span class='small'>(${m.cue})</span></li>`).join('')}</ul></div>`;
+
+  exps.innerHTML = exerciseVideos.map(v=>`<div class=\"card\"><div class='k'>${v.exercise}</div><div class='video'><a href='${v.primary}' target='_blank'>Primary video</a> <span class='small'>— ${v.primaryNote}</span></div><div class='video'><a href='${v.backup}' target='_blank'>Backup video</a> <span class='small'>— ${v.backupNote}</span></div></div>`).join('');
+}
+
+render();
+</script>
+</body>
+</html>
